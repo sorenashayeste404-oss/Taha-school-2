@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#5b4cdb" />
+  <meta name="description" content="برنامه ۱۰ مدرسه طاها - برنامه هفتگی و کارهای روزانه دانش‌آموزان پایه دهم" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>برنامه ۱۰ مدرسه طاها</title>
+
+  <!-- Vazirmatn Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text">در حال بارگذاری...</div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- ==================== SCREEN: Class Selection ==================== -->
+  <div id="screen-select" class="screen">
+    <div class="select-card">
+      <div class="select-logo">📚</div>
+      <h1>برنامه ۱۰ مدرسه طاها</h1>
+      <p class="subtitle">کلاس خودت را انتخاب کن</p>
+
+      <div class="field-group">
+        <label>رشته</label>
+        <div class="option-grid" id="field-options">
+          <button type="button" class="option-btn" data-value="تجربی">تجربی</button>
+          <button type="button" class="option-btn" data-value="ریاضی">ریاضی</button>
+          <button type="button" class="option-btn" data-value="انسانی">انسانی</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>شعبه</label>
+        <div class="option-grid two-col" id="branch-options">
+          <button type="button" class="option-btn" data-value="1">شعبه ۱</button>
+          <button type="button" class="option-btn" data-value="2">شعبه ۲</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-block" id="btn-enter" disabled>
+        ورود به برنامه
+      </button>
+    </div>
+
+    <a class="admin-link" id="link-admin">ورود مدیر</a>
+  </div>
+
+  <!-- ==================== SCREEN: Student App ==================== -->
+  <div id="screen-student" class="screen">
+    <!-- Header -->
+    <header class="app-header">
+      <div>
+        <div class="header-title">برنامه ۱۰ مدرسه طاها</div>
+        <div class="header-sub" id="header-group">—</div>
+      </div>
+      <div class="sync-badge" id="sync-badge">
+        <span class="dot"></span>
+        <span>آنلاین</span>
+      </div>
+    </header>
+
+    <!-- View: Home -->
+    <div id="view-home" class="view active">
+      <div id="home-content"></div>
+    </div>
+
+    <!-- View: Schedule -->
+    <div id="view-schedule" class="view">
+      <div class="section-title"><span class="icon">📅</span> برنامه هفتگی</div>
+      <div class="day-tabs" id="day-tabs"></div>
+      <div id="schedule-list"></div>
+    </div>
+
+    <!-- View: Tasks -->
+    <div id="view-tasks" class="view">
+      <div class="section-title"><span class="icon">✅</span> کارهای روزانه</div>
+      <div class="filter-tabs" id="task-filters"></div>
+      <div id="tasks-list"></div>
+    </div>
+
+    <!-- View: Messenger (Chat) -->
+    <div id="view-chat" class="view">
+      <div class="chat-header">
+        <span class="icon">💬</span>
+        <span>پیام‌رسان</span>
+      </div>
+      <div id="chat-messages" class="chat-messages" aria-live="polite">
+        <div class="chat-loading" id="chat-loading">
+          <div class="spinner small"></div>
+          <span>در حال دریافت پیام‌ها...</span>
+        </div>
+      </div>
+      <div class="chat-input-bar">
+        <input
+          type="text"
+          id="chat-input"
+          class="chat-input"
+          placeholder="نوشتن پیام..."
+          maxlength="500"
+          autocomplete="off"
+          enterkeyhint="send"
+        />
+        <button type="button" class="chat-send-btn" id="chat-send-btn" aria-label="ارسال پیام">
+          ➤
+        </button>
+      </div>
+    </div>
+
+    <!-- View: Settings -->
+    <div id="view-settings" class="view">
+      <div class="section-title"><span class="icon">⚙️</span> تنظیمات</div>
+      <div class="settings-card">
+        <div class="setting-row">
+          <span class="setting-label">کلاس فعلی</span>
+          <span class="setting-value" id="settings-group">—</span>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">تغییر کلاس</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-change-class">تغییر</button>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">نام نمایشی (چت)</span>
+          <span class="setting-value" id="settings-display-name">—</span>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">تغییر نام نمایشی</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-change-name">تغییر</button>
+        </div>
+      </div>
+      <div class="app-info">
+        <p>برنامه ۱۰ مدرسه طاها</p>
+        <p>نسخه ۱.۱.۰</p>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button type="button" class="nav-item active" data-view="home">
+        <span class="nav-icon">🏠</span>
+        <span>خانه</span>
+      </button>
+      <button type="button" class="nav-item" data-view="schedule">
+        <span class="nav-icon">📅</span>
+        <span>برنامه</span>
+      </button>
+      <button type="button" class="nav-item" data-view="tasks">
+        <span class="nav-icon">✅</span>
+        <span>کارها</span>
+      </button>
+      <button type="button" class="nav-item" data-view="chat">
+        <span class="nav-icon">💬</span>
+        <span>پیام‌رسان</span>
+      </button>
+      <button type="button" class="nav-item" data-view="settings">
+        <span class="nav-icon">⚙️</span>
+        <span>تنظیمات</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ==================== SCREEN: Admin Login ==================== -->
+  <div id="screen-admin-login" class="screen">
+    <div class="login-card">
+      <div class="select-logo">🔐</div>
+      <h1>ورود مدیر</h1>
+      <p class="subtitle">رمز عبور مدیر را وارد کنید</p>
+
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label class="form-label" for="admin-password">رمز عبور مدیر</label>
+          <input type="password" id="admin-password" class="form-input" placeholder="رمز را وارد کنید" required autocomplete="current-password" dir="ltr" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-admin-login">ورود</button>
+      </form>
+
+      <a class="back-link" id="link-back-student">بازگشت به برنامه دانش‌آموز</a>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN: Admin Panel ==================== -->
+  <div id="screen-admin" class="screen">
+    <header class="admin-header">
+      <h1>پنل مدیریت</h1>
+      <div class="admin-header-actions">
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-admin-to-student">برنامه دانش‌آموز</button>
+        <button type="button" class="btn-logout" id="btn-admin-logout">خروج</button>
+      </div>
+    </header>
+
+    <div class="admin-tabs">
+      <button type="button" class="admin-tab active" data-tab="dashboard">داشبورد</button>
+      <button type="button" class="admin-tab" data-tab="lessons">برنامه کلاسی</button>
+      <button type="button" class="admin-tab" data-tab="tasks">کارهای روزانه</button>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="admin-view active">
+      <div id="admin-dashboard-content"></div>
+    </div>
+
+    <!-- Admin Lessons -->
+    <div id="admin-lessons" class="admin-view">
+      <div class="admin-toolbar">
+        <div class="filters">
+          <select id="admin-lesson-group" class="form-select"></select>
+          <select id="admin-lesson-day" class="form-select"></select>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="btn-add-lesson">+ افزودن درس</button>
+      </div>
+      <div id="admin-lessons-list"></div>
+    </div>
+
+    <!-- Admin Tasks -->
+    <div id="admin-tasks" class="admin-view">
+      <div class="admin-toolbar">
+        <div class="filters">
+          <select id="admin-task-group" class="form-select"></select>
+          <select id="admin-task-day" class="form-select"></select>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="btn-add-task">+ افزودن کار</button>
+      </div>
+      <div id="admin-tasks-list"></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: Lesson Form ==================== -->
+  <div class="modal-overlay" id="lesson-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="lesson-modal-title">افزودن درس</h2>
+        <button type="button" class="modal-close" id="lesson-modal-close">✕</button>
+      </div>
+      <form id="lesson-form">
+        <div class="form-group">
+          <label class="form-label" for="lesson-group">کلاس</label>
+          <select id="lesson-group" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lesson-day">روز</label>
+          <select id="lesson-day" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lesson-time">ساعت</label>
+          <input type="text" id="lesson-time" class="form-input" placeholder="08:00 - 09:30" required dir="ltr" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lesson-name">نام درس</label>
+          <input type="text" id="lesson-name" class="form-input" placeholder="ریاضی" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lesson-teacher">نام معلم</label>
+          <input type="text" id="lesson-teacher" class="form-input" placeholder="آقای رضایی" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="lesson-modal-close2" onclick="document.getElementById('lesson-modal').classList.remove('open')">انصراف</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-lesson">ذخیره درس</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: Task Form ==================== -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="task-modal-title">افزودن کار</h2>
+        <button type="button" class="modal-close" id="task-modal-close">✕</button>
+      </div>
+      <form id="task-form">
+        <div class="form-group">
+          <label class="form-label" for="task-group">کلاس</label>
+          <select id="task-group" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="task-day">روز</label>
+          <select id="task-day" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="task-title">عنوان</label>
+          <input type="text" id="task-title" class="form-input" placeholder="کوییز ریاضی" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="task-desc">توضیح</label>
+          <textarea id="task-desc" class="form-textarea" placeholder="فصل ۱ و ۲"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="document.getElementById('task-modal').classList.remove('open')">انصراف</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-task">ذخیره کار</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: Confirm Delete ==================== -->
+  <div class="modal-overlay confirm-dialog" id="confirm-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>تأیید حذف</h2>
+      </div>
+      <p id="confirm-message" class="text-secondary" style="margin-bottom:1.25rem">آیا مطمئن هستید؟</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="confirm-no">انصراف</button>
+        <button type="button" class="btn btn-danger" id="confirm-yes">حذف</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: Display Name ==================== -->
+  <div class="modal-overlay" id="name-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="name-modal-title">نام نمایشی</h2>
+        <button type="button" class="modal-close" id="name-modal-close">✕</button>
+      </div>
+      <p class="text-secondary text-sm" style="margin-bottom:1rem">
+        این نام در پیام‌رسان برای دیگران نمایش داده می‌شود.
+      </p>
+      <form id="name-form">
+        <div class="form-group">
+          <label class="form-label" for="display-name-input">نام شما</label>
+          <input
+            type="text"
+            id="display-name-input"
+            class="form-input"
+            placeholder="مثلاً علی"
+            maxlength="30"
+            required
+            autocomplete="nickname"
+          />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="name-modal-cancel">انصراف</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-name">ذخیره</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
